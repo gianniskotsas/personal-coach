@@ -2,20 +2,35 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { ModeToggle } from "@/components/mode-toggle";
+
+const NAV_LINKS = [
+  { href: "/", label: "Timeline" },
+  { href: "/notes", label: "Notes" },
+  { href: "/analytics", label: "Analytics" },
+];
 
 export default async function Layout({ children }: { children: React.ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
   return (
-    <div style={{ fontFamily: "sans-serif", maxWidth: 960, margin: "0 auto", padding: 24 }}>
-      <nav style={{ display: "flex", gap: 16, borderBottom: "1px solid #ddd", paddingBottom: 12, marginBottom: 24 }}>
-        <strong>Coach Memory</strong>
-        <Link href="/">Timeline</Link>
-        <Link href="/search">Search</Link>
-        <Link href="/notes">Notes</Link>
-        <Link href="/analytics">Analytics</Link>
+    <div className="min-h-dvh flex flex-col">
+      <nav className="flex items-center gap-6 border-b px-6 py-4">
+        <span className="text-sm font-semibold tracking-tight">Personal Coach</span>
+        {NAV_LINKS.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {link.label}
+          </Link>
+        ))}
+        <div className="ml-auto">
+          <ModeToggle />
+        </div>
       </nav>
-      {children}
+      <main className="flex-1">{children}</main>
     </div>
   );
 }

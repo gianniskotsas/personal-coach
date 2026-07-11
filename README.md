@@ -1,4 +1,4 @@
-# coach-memory
+# Personal Coach
 
 A personal career-coach memory service. It ingests daily/weekly/quarterly coaching
 logs and notes, embeds them into Postgres (pgvector) for hybrid semantic + keyword
@@ -36,7 +36,7 @@ search, notes capture, analytics) for browsing the same data directly.
 | `OPENAI_API_KEY` | app | Embeddings for ingest/search |
 | `BETTER_AUTH_SECRET` | app | BetterAuth session/token signing secret |
 | `BETTER_AUTH_URL` | app | Public base URL BetterAuth issues callbacks against |
-| `COACH_MEMORY_URL` | sync CLI | Base URL of the coach-memory server to sync against |
+| `COACH_MEMORY_URL` | sync CLI | Base URL of the Personal Coach server to sync against |
 | `COACH_SYNC_API_KEY` | sync CLI | API key (from `create-api-key`) used to authenticate sync pushes/pulls |
 
 ## Scripts

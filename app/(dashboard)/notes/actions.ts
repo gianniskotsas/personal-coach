@@ -4,16 +4,21 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { createNote } from "@/lib/notes";
 
-export async function addNote(formData: FormData) {
+export async function addNote(formData: FormData): Promise<{ ok: boolean; error?: string }> {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) throw new Error("unauthorized");
+  if (!session) return { ok: false, error: "unauthorized" };
   const text = String(formData.get("text") ?? "").trim();
-  if (!text) return;
-  await createNote({
-    text,
-    noteType: String(formData.get("note_type") ?? "thought"),
-    tags: String(formData.get("tags") ?? "").split(",").map((t) => t.trim()).filter(Boolean),
-    source: "web",
-  });
+  if (!text) return { ok: false, error: "Note text is required" };
+  try {
+    await createNote({
+      text,
+      noteType: String(formData.get("note_type") ?? "thought"),
+      tags: String(formData.get("tags") ?? "").split(",").map((t) => t.trim()).filter(Boolean),
+      source: "web",
+    });
+  } catch {
+    return { ok: false, error: "Failed to save note — please try again" };
+  }
   revalidatePath("/notes");
+  return { ok: true };
 }

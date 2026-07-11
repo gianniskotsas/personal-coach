@@ -5,17 +5,24 @@ export const dynamic = "force-dynamic";
 function Bars({ title, rows }: { title: string; rows: { label: string; value: number }[] }) {
   const max = Math.max(...rows.map((r) => r.value), 1);
   return (
-    <section style={{ margin: "24px 0" }}>
-      <h2 style={{ fontSize: 18 }}>{title}</h2>
-      {rows.map((r) => (
-        <div key={r.label} style={{ display: "grid", gridTemplateColumns: "200px 1fr 60px", gap: 8, alignItems: "center", margin: "4px 0" }}>
-          <span style={{ fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.label}</span>
-          <div style={{ background: "#e8efe9", borderRadius: 4 }}>
-            <div style={{ width: `${(r.value / max) * 100}%`, background: "#2E6E52", height: 14, borderRadius: 4 }} />
+    <section className="mb-10">
+      <h2 className="text-xs uppercase tracking-wide text-muted-foreground/70 mb-3">{title}</h2>
+      <div className="space-y-1.5">
+        {rows.map((r) => (
+          <div key={r.label} className="grid grid-cols-[180px_1fr_50px] gap-3 items-center">
+            <span className="text-xs truncate">{r.label}</span>
+            <div className="h-3.5 rounded bg-muted">
+              <div
+                className="h-full rounded bg-foreground"
+                style={{ width: `${(r.value / max) * 100}%` }}
+              />
+            </div>
+            <span className="text-xs text-muted-foreground text-right">
+              {Math.round(r.value * 10) / 10}
+            </span>
           </div>
-          <span style={{ fontSize: 13, textAlign: "right" }}>{Math.round(r.value * 10) / 10}</span>
-        </div>
-      ))}
+        ))}
+      </div>
     </section>
   );
 }
@@ -37,12 +44,12 @@ export default async function Analytics() {
     `SELECT to_char(date_trunc('month', date), 'YYYY-MM') AS label, count(*)::float AS value
      FROM flags GROUP BY 1 ORDER BY 1 DESC LIMIT 12`);
   return (
-    <main>
-      <h1>Analytics</h1>
+    <div className="max-w-2xl mx-auto px-6 py-8">
+      <h1 className="text-lg font-semibold tracking-tight mb-6">Analytics</h1>
       <Bars title="Avg energy % per workstream by month" rows={energy} />
       <Bars title="Hours by activity type" rows={hours} />
       <Bars title="Collaborator frequency" rows={people} />
       <Bars title="Flags per month" rows={flags} />
-    </main>
+    </div>
   );
 }
