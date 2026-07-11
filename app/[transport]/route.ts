@@ -5,7 +5,7 @@ import { registerTools } from "@/lib/mcp/tools";
 
 const mcpHandler = createMcpHandler(
   (server) => registerTools(server),
-  { serverInfo: { name: "coach-memory", version: "1.0.0" } },
+  { serverInfo: { name: "personal-coach", version: "1.0.0" } },
   { basePath: "", maxDuration: 60 }
 );
 
