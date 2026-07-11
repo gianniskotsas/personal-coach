@@ -1,0 +1,50 @@
+# Deploy this file as a single "Docker Compose" resource in Coolify — it brings up the
+# app and its pgvector database together as one stack, with Coolify auto-assigning a
+# domain + TLS to the app via the SERVICE_FQDN magic variable (no manual proxy/port
+# config needed). Coolify manages the network between services automatically, so this
+# file intentionally defines no custom `networks:` block.
+#
+# In the Coolify UI, set these before deploying:
+#   OPENAI_API_KEY      - your OpenAI key (embeddings)
+#   BETTER_AUTH_SECRET  - openssl rand -hex 32
+# Everything else (DB credentials, the app's public URL) is generated/wired
+# automatically. The schema migrates itself on every boot (see
+# scripts/docker-entrypoint.mjs) — the only manual step left after the first
+# deploy is a one-time user + API key bootstrap. Expose the db service's port
+# temporarily (or use an SSH tunnel to the Coolify host) and, from your local
+# checkout, run against that DATABASE_URL:
+#   ALLOW_SIGNUP=true npm run create-user -- <email> <password>
+#   npm run create-api-key -- sync-cli
+# Then unset ALLOW_SIGNUP (it's not set here, so it's already off by default).
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: coach
+      POSTGRES_PASSWORD: coach
+      POSTGRES_DB: coach_memory
+    volumes:
+      - coach_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U coach -d coach_memory"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - SERVICE_FQDN_APP
+      - DATABASE_URL=postgres://coach:coach@db:5432/coach_memory
+      - OPENAI_API_KEY=${OPENAI_API_KEY:?}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:?}
+      - BETTER_AUTH_URL=${SERVICE_URL_APP}
+    restart: unless-stopped
+
+volumes:
+  coach_pg:

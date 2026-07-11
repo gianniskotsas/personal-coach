@@ -16,5 +16,6 @@ COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/lib/schema.sql ./lib/schema.sql
 COPY --from=build /app/lib/auth-schema.sql ./lib/auth-schema.sql
+COPY --from=build /app/scripts/docker-entrypoint.mjs ./scripts/docker-entrypoint.mjs
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["node", "scripts/docker-entrypoint.mjs"]
