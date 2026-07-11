@@ -9,12 +9,16 @@ export async function addNote(formData: FormData): Promise<{ ok: boolean; error?
   if (!session) return { ok: false, error: "unauthorized" };
   const text = String(formData.get("text") ?? "").trim();
   if (!text) return { ok: false, error: "Note text is required" };
-  await createNote({
-    text,
-    noteType: String(formData.get("note_type") ?? "thought"),
-    tags: String(formData.get("tags") ?? "").split(",").map((t) => t.trim()).filter(Boolean),
-    source: "web",
-  });
+  try {
+    await createNote({
+      text,
+      noteType: String(formData.get("note_type") ?? "thought"),
+      tags: String(formData.get("tags") ?? "").split(",").map((t) => t.trim()).filter(Boolean),
+      source: "web",
+    });
+  } catch {
+    return { ok: false, error: "Failed to save note — please try again" };
+  }
   revalidatePath("/notes");
   return { ok: true };
 }
