@@ -13,7 +13,7 @@ const asError = (e: unknown) => ({ content: [{ type: "text" as const, text: Stri
 
 export function registerTools(server: McpServer, opts: { embed?: EmbedFn } = {}) {
   server.registerTool("search",
-    { title: "Search coach memory",
+    { title: "Search personal coach memory",
       description: "Hybrid (semantic + keyword) search over all coach history and notes.",
       inputSchema: {
         query: z.string(), topK: z.number().int().min(1).max(50).optional(),
