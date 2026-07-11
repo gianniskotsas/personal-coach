@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0",
+  "description": "Daily coach log. Append only. Each entry is one business day. Query by date, workstream, activity_type, flags, customer_calls, etc.",
+  "entries": [
+    {
+      "date": "2026-04-01",
+      "day": "Wednesday",
+      "tier": "daily",
+      "headline": "Busy day across product, engineering, and customer calls.",
+      "workstreams": {
+        "product": {
+          "percent_energy": 40,
+          "activities": [
+            {
+              "name": "Cash balances page redesign — flat table + bar chart concept",
+              "type": "product_ux_strategy",
+              "description": "Reviewed the cash balances homepage redesign with Tom in the weekly customer sync: flat filterable table plus a stacked bar chart and KPI cards. Agreed the page could replace the need for a separate summary report.",
+              "artifact": "Meeting notes: Acme Weekly, Apr 1 11:00am",
+              "estimated_hours": 0.75,
+              "collaborators": ["Tom Thorn", "Jamie Rivera"],
+              "impact": "cash_balances_page_redesign_direction_set"
+            },
+            {
+              "name": "Docs platform comparison posted to team channel",
+              "type": "product_tooling_decision",
+              "description": "Completed a comparison of two documentation platforms and posted a recommendation with tradeoffs to the team channel.",
+              "artifact": "Team channel post, Apr 1",
+              "estimated_hours": 1.0,
+              "collaborators": ["Priya Anand"],
+              "impact": "docs_platform_decision_shared"
+            }
+          ]
+        },
+        "engineering": {
+          "percent_energy": 30,
+          "activities": [
+            {
+              "name": "Investment data ingestion firefight — incorrect past balances",
+              "type": "data_pipeline_ops",
+              "description": "Customer investment data was not updating correctly. Traced to a scheduled report bug and coordinated a fix with engineering.",
+              "artifact": "Team thread, Apr 1",
+              "estimated_hours": 1.5,
+              "collaborators": ["Jamie Rivera", "Sam Okafor"],
+              "impact": "investment_balances_corrected"
+            }
+          ]
+        },
+        "other": {
+          "percent_energy": 30,
+          "activities": [
+            {
+              "name": "Career development check-in",
+              "type": "career_development",
+              "description": "Discussed role scope and growth areas with manager.",
+              "artifact": "1:1 notes, Apr 1",
+              "estimated_hours": 0.5,
+              "collaborators": ["Morgan Lee"],
+              "impact": "role_scope_discussed"
+            }
+          ]
+        }
+      },
+      "flags": []
+    },
+    {
+      "date": "2026-04-02",
+      "day": "Thursday",
+      "tier": "daily",
+      "headline": "Follow-up day: tickets created from yesterday's calls, a root-cause investigation, and a partner evaluation call.",
+      "workstreams": {
+        "product": {
+          "percent_energy": 35,
+          "activities": [
+            {
+              "name": "Customer pain point tracking system designed",
+              "type": "product_ops_design",
+              "description": "Designed a workflow to centralize customer pain points captured from meeting notes into the issue tracker.",
+              "artifact": "Design doc, Apr 2",
+              "estimated_hours": 1.5,
+              "collaborators": ["Priya Anand", "Morgan Lee"],
+              "impact": "pain_point_capture_system_designed"
+            }
+          ]
+        },
+        "solution_engineering": {
+          "percent_energy": 20,
+          "activities": [
+            {
+              "name": "Partner evaluation call — no meeting notes captured",
+              "type": "partner_evaluation_call",
+              "description": "Call with a prospective connectivity partner. Notes were not captured automatically, so a summary was shared with the team afterward.",
+              "artifact": "Summary shared in team DM, Apr 2",
+              "estimated_hours": 1.0,
+              "collaborators": ["Jamie Rivera"],
+              "impact": "partner_poc_status_shared"
+            }
+          ]
+        },
+        "engineering": {
+          "percent_energy": 25,
+          "activities": [
+            {
+              "name": "Duplicate transaction root-cause investigation",
+              "type": "bug_investigation",
+              "description": "Investigated duplicate transactions reported by a customer and traced the issue to an upstream vendor sync pattern.",
+              "artifact": "Team thread, Apr 2",
+              "estimated_hours": 1.5,
+              "collaborators": ["Sam Okafor", "Jamie Rivera"],
+              "impact": "duplication_root_caused"
+            }
+          ]
+        },
+        "customer_success": {
+          "percent_energy": 20,
+          "activities": [
+            {
+              "name": "Customer trust issue flagged",
+              "type": "customer_escalation",
+              "description": "Flagged that a customer is losing trust in a recent feature change and escalated for follow-up.",
+              "artifact": "Escalation thread, Apr 2",
+              "estimated_hours": 0.5,
+              "collaborators": ["Priya Anand"],
+              "impact": "trust_risk_flagged"
+            }
+          ]
+        }
+      },
+      "flags": []
+    }
+  ]
+}

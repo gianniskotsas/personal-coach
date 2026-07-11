@@ -1,0 +1,38 @@
+{
+  "name": "coach-memory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "migrate": "tsx --env-file=.env.local scripts/migrate.ts",
+    "test": "tsx --env-file=.env.test node_modules/vitest/vitest.mjs run",
+    "create-user": "tsx --env-file=.env.local scripts/create-user.ts",
+    "create-api-key": "tsx --env-file=.env.local scripts/create-api-key.ts",
+    "sync": "tsx --env-file=.env.local sync/sync.ts",
+    "mcp:e2e": "tsx --env-file=.env.local scripts/mcp-e2e.ts"
+  },
+  "dependencies": {
+    "@better-auth/api-key": "1.6.23",
+    "@modelcontextprotocol/sdk": "1.26.0",
+    "better-auth": "^1.6.23",
+    "mcp-handler": "^1.1.0",
+    "next": "16.2.10",
+    "openai": "^6.46.0",
+    "pg": "^8.22.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsx": "^4.23.0",
+    "typescript": "^5",
+    "vitest": "^4.1.10"
+  }
+}

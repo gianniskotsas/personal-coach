@@ -1,0 +1,12 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    ports: ["5433:5432"]
+    environment:
+      POSTGRES_USER: coach
+      POSTGRES_PASSWORD: coach
+      POSTGRES_DB: coach_memory
+    volumes:
+      - coach_pg:/var/lib/postgresql/data
+volumes:
+  coach_pg:

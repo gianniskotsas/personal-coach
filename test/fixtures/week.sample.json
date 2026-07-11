@@ -1,0 +1,36 @@
+{
+  "week_start": "2026-06-15",
+  "week_end": "2026-06-19",
+  "daily_entries": [
+    { "date": "2026-06-15", "note": "see goals-log for daily detail" },
+    { "date": "2026-06-16", "note": "see goals-log for daily detail" }
+  ],
+  "weekly_summary": {
+    "tier": "weekly",
+    "week_start": "2026-06-15",
+    "week_end": "2026-06-19",
+    "center_of_gravity": "product",
+    "product_pct": 30,
+    "se_pct": 25,
+    "engineering_pct": 30,
+    "cs_pct": 10,
+    "other_pct": 5,
+    "headline": "Dense operational week: cash management page shipped to a design review, a new customer integration kicked off, a bug root-caused and communicated, and a partner pricing decision made.",
+    "key_accomplishments": [
+      "Shipped the cash management page redesign through design review",
+      "Led the kickoff call for a new three-way customer integration",
+      "Root-caused a duplicate-transaction bug and communicated the fix path to the affected customer",
+      "Closed out a partner pricing decision with the leadership team"
+    ],
+    "inferred_objective": "Advance the cash management redesign, unblock the new customer integration, and resolve the standing partner pricing question.",
+    "patterns_and_tensions": "Solid week of cross-functional execution. Most of the week's energy went to solution engineering and integration work, with product design threaded through review sessions rather than dedicated discovery time. No interpersonal friction observed; one open watch item on total meeting load.",
+    "behaviour_summary": "Collaborative and direct throughout the week. Took ownership of ambiguous problems (the duplicate-transaction bug) without waiting to be asked, and handled a partner pricing negotiation calmly.",
+    "customer_calls_this_week": [
+      "Weekly sync with Acme (Tom Thorn) — cash management feedback",
+      "Kickoff call with a new enterprise customer — integration scoping",
+      "Partner pricing review — internal, with leadership"
+    ],
+    "flags_fired_this_week": [],
+    "one_next_action": "Carve out a dedicated block next week for product discovery work that isn't tied to a specific customer call."
+  }
+}
