@@ -47,6 +47,27 @@ npm run build     # production build (next build)
 npm run sync      # push local docs, pull notes mirror, watermark progress
 ```
 
+## CLI
+
+A standalone `personal-coach` CLI is available for ingest and read access
+(search, notes, context, person history, sync status) without the MCP/OAuth
+flow — useful for scripts, cron jobs, or terminal use. It authenticates with
+the same `COACH_SYNC_API_KEY` the sync script uses.
+
+```bash
+npm link                              # one-time, from this repo
+personal-coach ingest                 # push career-coach/state/, pull new notes
+personal-coach ingest path/to/file.json   # push just one file
+personal-coach search "cash management" --topK=5
+personal-coach notes list --type=idea
+personal-coach notes add "some thought" --type=thought --tags=a,b
+personal-coach context week 2026-06-15
+personal-coach person "Tom" --since=2026-01-01
+personal-coach status
+```
+
+Add `--json` to any read command for machine-readable output.
+
 ## Production deploy
 
 ### Coolify (recommended — one resource, no manual proxy/DB wiring)
