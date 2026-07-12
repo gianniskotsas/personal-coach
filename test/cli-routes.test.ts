@@ -9,6 +9,7 @@ let apiKey: string;
 beforeAll(async () => {
   await query("TRUNCATE documents, activities, notes RESTART IDENTITY CASCADE");
   process.env.ALLOW_SIGNUP = "true";
+  process.env.COACH_EMBED_MODE = "fake";
   const email = `cli-route-test-${Date.now()}@test.local`;
   await auth.api.signUpEmail({ body: { email, password: "hunter2hunter2", name: "CLI Test" } });
   const [{ id: userId }] = await query<{ id: string }>(`SELECT id FROM "user" WHERE email = $1`, [email]);
@@ -92,5 +93,38 @@ describe("GET /api/cli/context", () => {
     expect(body).toHaveProperty("dailies");
     expect(body).toHaveProperty("weeklies");
     expect(body).toHaveProperty("quarterlyDocs");
+  });
+});
+
+describe("POST /api/cli/search", () => {
+  beforeAll(async () => {
+    await createNote({ text: "Kicked off the Northbridge integration", noteType: "thought" }, { embed: fakeEmbed });
+  });
+
+  it("401s without an api key", async () => {
+    const { POST } = await import("@/app/api/cli/search/route");
+    const res = await POST(new Request("http://test/api/cli/search", {
+      method: "POST", body: JSON.stringify({ query: "Northbridge" }),
+    }));
+    expect(res.status).toBe(401);
+  });
+
+  it("400s on an empty query", async () => {
+    const { POST } = await import("@/app/api/cli/search/route");
+    const res = await POST(new Request("http://test/api/cli/search", {
+      method: "POST", headers: { "x-api-key": apiKey }, body: JSON.stringify({ query: "" }),
+    }));
+    expect(res.status).toBe(400);
+  });
+
+  it("returns hits for a matching query with a valid key", async () => {
+    const { POST } = await import("@/app/api/cli/search/route");
+    const res = await POST(new Request("http://test/api/cli/search", {
+      method: "POST", headers: { "x-api-key": apiKey }, body: JSON.stringify({ query: "Northbridge" }),
+    }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.hits.length).toBeGreaterThan(0);
+    expect(body.hits[0].text).toContain("Northbridge");
   });
 });
