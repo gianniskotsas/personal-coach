@@ -71,7 +71,12 @@ async function main() {
   try {
     await runSync({ verbose: process.argv.includes("--all") });
   } catch (e) {
-    console.error(`sync failed (will self-heal next run): ${String(e)}`);
+    const message = e instanceof Error ? e.message : String(e);
+    if (message === "COACH_SYNC_API_KEY not set") {
+      console.error(message);
+    } else {
+      console.error(`sync failed (will self-heal next run): ${String(e)}`);
+    }
     process.exit(1);
   }
 }
