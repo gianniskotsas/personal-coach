@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "personal-coach": "./bin/personal-coach.mjs"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,7 +15,8 @@
     "create-user": "tsx --env-file=.env.local scripts/create-user.ts",
     "create-api-key": "tsx --env-file=.env.local scripts/create-api-key.ts",
     "sync": "tsx --env-file=.env.local sync/sync.ts",
-    "mcp:e2e": "tsx --env-file=.env.local scripts/mcp-e2e.ts"
+    "mcp:e2e": "tsx --env-file=.env.local scripts/mcp-e2e.ts",
+    "cli": "tsx cli/index.ts"
   },
   "dependencies": {
     "@better-auth/api-key": "1.6.23",
