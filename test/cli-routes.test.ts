@@ -128,3 +128,45 @@ describe("POST /api/cli/search", () => {
     expect(body.hits[0].text).toContain("Northbridge");
   });
 });
+
+describe("/api/cli/notes", () => {
+  it("GET 401s without an api key", async () => {
+    const { GET } = await import("@/app/api/cli/notes/route");
+    const res = await GET(new Request("http://test/api/cli/notes"));
+    expect(res.status).toBe(401);
+  });
+
+  it("POST 401s without an api key", async () => {
+    const { POST } = await import("@/app/api/cli/notes/route");
+    const res = await POST(new Request("http://test/api/cli/notes", {
+      method: "POST", body: JSON.stringify({ text: "should be rejected" }),
+    }));
+    expect(res.status).toBe(401);
+  });
+
+  it("POST 400s on empty text", async () => {
+    const { POST } = await import("@/app/api/cli/notes/route");
+    const res = await POST(new Request("http://test/api/cli/notes", {
+      method: "POST", headers: { "x-api-key": apiKey }, body: JSON.stringify({ text: "" }),
+    }));
+    expect(res.status).toBe(400);
+  });
+
+  it("POST creates a note with source='cli', then GET lists it", async () => {
+    const { POST, GET } = await import("@/app/api/cli/notes/route");
+    const postRes = await POST(new Request("http://test/api/cli/notes", {
+      method: "POST", headers: { "x-api-key": apiKey },
+      body: JSON.stringify({ text: "CLI-created note", note_type: "idea", tags: ["cli-test"] }),
+    }));
+    expect(postRes.status).toBe(200);
+    const created = await postRes.json();
+    expect(created.source).toBe("cli");
+    expect(created.note_type).toBe("idea");
+
+    const getRes = await GET(new Request("http://test/api/cli/notes?note_type=idea",
+      { headers: { "x-api-key": apiKey } }));
+    expect(getRes.status).toBe(200);
+    const body = await getRes.json();
+    expect(body.notes.some((n: { id: number }) => n.id === created.id)).toBe(true);
+  });
+});
