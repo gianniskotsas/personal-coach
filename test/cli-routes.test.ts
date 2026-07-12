@@ -61,3 +61,36 @@ describe("GET /api/cli/person", () => {
     expect(body.activities.length).toBeGreaterThan(0);
   });
 });
+
+describe("GET /api/cli/context", () => {
+  it("401s without an api key", async () => {
+    const { GET } = await import("@/app/api/cli/context/route");
+    const res = await GET(new Request("http://test/api/cli/context?type=day&start=2026-06-01"));
+    expect(res.status).toBe(401);
+  });
+
+  it("400s on an invalid type", async () => {
+    const { GET } = await import("@/app/api/cli/context/route");
+    const res = await GET(new Request("http://test/api/cli/context?type=month&start=2026-06-01",
+      { headers: { "x-api-key": apiKey } }));
+    expect(res.status).toBe(400);
+  });
+
+  it("400s when start is missing", async () => {
+    const { GET } = await import("@/app/api/cli/context/route");
+    const res = await GET(new Request("http://test/api/cli/context?type=day",
+      { headers: { "x-api-key": apiKey } }));
+    expect(res.status).toBe(400);
+  });
+
+  it("returns a context slice with a valid key", async () => {
+    const { GET } = await import("@/app/api/cli/context/route");
+    const res = await GET(new Request("http://test/api/cli/context?type=day&start=2026-06-01",
+      { headers: { "x-api-key": apiKey } }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body).toHaveProperty("dailies");
+    expect(body).toHaveProperty("weeklies");
+    expect(body).toHaveProperty("quarterlyDocs");
+  });
+});
