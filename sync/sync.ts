@@ -30,38 +30,46 @@ export function appendNotesToMirror(mirrorPath: string, notes: NoteRow[]): numbe
   return fresh.length;
 }
 
-async function main() {
+export function defaultStateDir(): string {
+  return process.env.COACH_STATE_DIR
+    ?? join(import.meta.dirname, "..", "..", "career-coach", "state");
+}
+
+export async function runSync(opts: { files?: { path: string; content: string }[]; verbose?: boolean } = {}): Promise<void> {
   const base = process.env.COACH_MEMORY_URL ?? "http://localhost:3000";
   const apiKey = process.env.COACH_SYNC_API_KEY;
-  const stateDir = process.env.COACH_STATE_DIR
-    ?? join(import.meta.dirname, "..", "..", "career-coach", "state");
-  if (!apiKey) { console.error("COACH_SYNC_API_KEY not set"); process.exit(1); }
-  const verbose = process.argv.includes("--all");
-  try {
-    // push
-    const files = collectFiles(stateDir);
-    const res = await fetch(`${base}/api/ingest`, {
-      method: "POST", headers: { "content-type": "application/json", "x-api-key": apiKey },
-      body: JSON.stringify({ files }),
-    });
-    if (!res.ok) throw new Error(`ingest HTTP ${res.status}`);
-    const { results, errors } = await res.json();
-    const changed = results.filter((r: { status: string }) => r.status !== "unchanged");
-    console.log(`push: ${files.length} files → ${changed.length} changed, ${errors.length} errors`);
-    if (verbose || errors.length) console.log(JSON.stringify({ changed, errors }, null, 2));
+  const stateDir = defaultStateDir();
+  if (!apiKey) throw new Error("COACH_SYNC_API_KEY not set");
 
-    // pull
-    const statePath = join(stateDir, ".sync-state.json");
-    const state = existsSync(statePath) ? JSON.parse(readFileSync(statePath, "utf8")) : {};
-    const since = state.lastNotePull ?? "1970-01-01T00:00:00Z";
-    const pull = await fetch(`${base}/api/notes/export?since=${encodeURIComponent(since)}`,
-      { headers: { "x-api-key": apiKey } });
-    if (!pull.ok) throw new Error(`notes export HTTP ${pull.status}`);
-    const { notes } = (await pull.json()) as { notes: NoteRow[] };
-    const added = appendNotesToMirror(join(stateDir, "notes-log.json"), notes);
-    if (notes.length) state.lastNotePull = notes[notes.length - 1].created_at;
-    writeFileSync(statePath, JSON.stringify(state, null, 2));
-    console.log(`pull: ${added} new notes mirrored`);
+  // push
+  const files = opts.files ?? collectFiles(stateDir);
+  const res = await fetch(`${base}/api/ingest`, {
+    method: "POST", headers: { "content-type": "application/json", "x-api-key": apiKey },
+    body: JSON.stringify({ files }),
+  });
+  if (!res.ok) throw new Error(`ingest HTTP ${res.status}`);
+  const { results, errors } = await res.json();
+  const changed = results.filter((r: { status: string }) => r.status !== "unchanged");
+  console.log(`push: ${files.length} files → ${changed.length} changed, ${errors.length} errors`);
+  if (opts.verbose || errors.length) console.log(JSON.stringify({ changed, errors }, null, 2));
+
+  // pull
+  const statePath = join(stateDir, ".sync-state.json");
+  const state = existsSync(statePath) ? JSON.parse(readFileSync(statePath, "utf8")) : {};
+  const since = state.lastNotePull ?? "1970-01-01T00:00:00Z";
+  const pull = await fetch(`${base}/api/notes/export?since=${encodeURIComponent(since)}`,
+    { headers: { "x-api-key": apiKey } });
+  if (!pull.ok) throw new Error(`notes export HTTP ${pull.status}`);
+  const { notes } = (await pull.json()) as { notes: NoteRow[] };
+  const added = appendNotesToMirror(join(stateDir, "notes-log.json"), notes);
+  if (notes.length) state.lastNotePull = notes[notes.length - 1].created_at;
+  writeFileSync(statePath, JSON.stringify(state, null, 2));
+  console.log(`pull: ${added} new notes mirrored`);
+}
+
+async function main() {
+  try {
+    await runSync({ verbose: process.argv.includes("--all") });
   } catch (e) {
     console.error(`sync failed (will self-heal next run): ${String(e)}`);
     process.exit(1);
