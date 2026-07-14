@@ -1,12 +1,14 @@
+import { resolveUrl, resolveKey } from "./config";
+
 function baseUrl(): string {
-  const url = process.env.COACH_MEMORY_URL;
-  if (!url) throw new Error("COACH_MEMORY_URL is not set");
+  const url = resolveUrl();
+  if (!url) throw new Error("Not configured — run `personal-coach login` (or set COACH_MEMORY_URL)");
   return url;
 }
 
 function apiKey(): string {
-  const key = process.env.COACH_SYNC_API_KEY;
-  if (!key) throw new Error("COACH_SYNC_API_KEY is not set");
+  const key = resolveKey();
+  if (!key) throw new Error("Not authenticated — run `personal-coach login` (or set COACH_SYNC_API_KEY)");
   return key;
 }
 
