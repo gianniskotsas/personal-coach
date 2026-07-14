@@ -51,11 +51,13 @@ npm run sync      # push local docs, pull notes mirror, watermark progress
 
 A standalone `personal-coach` CLI is available for ingest and read access
 (search, notes, context, person history, sync status) without the MCP/OAuth
-flow — useful for scripts, cron jobs, or terminal use. It authenticates with
-the same `COACH_SYNC_API_KEY` the sync script uses.
+flow — useful for scripts, cron jobs, or terminal use.
 
 ```bash
 npm link                              # one-time, from this repo
+personal-coach login                  # one-time: prompts for server URL + API key,
+                                      # verifies them, and stores them (0600) in
+                                      # ~/.config/personal-coach/config.json
 personal-coach ingest                 # push career-coach/state/, pull new notes
 personal-coach ingest path/to/file.json   # push just one file
 personal-coach search "cash management" --topK=5
@@ -67,6 +69,13 @@ personal-coach status
 ```
 
 Add `--json` to any read command for machine-readable output.
+
+**Authentication.** After `personal-coach login`, credentials persist, so no
+secret needs to live in a script or scheduled-routine prompt. `COACH_MEMORY_URL`
+and `COACH_SYNC_API_KEY` environment variables still work and take precedence
+over the stored login when set (handy for CI or one-off overrides). Non-interactive
+login: `personal-coach login --url https://… --key <key>`, or pass the key via the
+`COACH_SYNC_API_KEY` env var to keep it out of shell history.
 
 ## Production deploy
 

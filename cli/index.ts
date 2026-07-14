@@ -8,12 +8,13 @@ export function registerCommand(name: string, fn: Command) {
 
 function printUsage() {
   console.log("Usage: personal-coach <command> [args]");
-  console.log("Commands: ingest, search, notes, context, person, status");
+  console.log("Commands: login, ingest, search, notes, context, person, status");
 }
 
 async function main() {
   // Later tasks add their `import "./commands/xyz";` side-effect imports here,
   // each calling registerCommand() at module load time.
+  await import("./commands/login");
   await import("./commands/ingest");
   await import("./commands/search");
   await import("./commands/notes");
