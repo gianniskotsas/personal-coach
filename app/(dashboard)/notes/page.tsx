@@ -1,10 +1,12 @@
 import { listNotes } from "@/lib/notes";
+import { requireSession } from "@/lib/require-session";
 import { NotesForm } from "@/components/notes-form";
 import { Badge } from "@/components/ui/badge";
 
 export const dynamic = "force-dynamic";
 
 export default async function Notes() {
+  await requireSession();
   const notes = (await listNotes({})).reverse();
   return (
     <div className="max-w-2xl mx-auto px-6 py-8">
