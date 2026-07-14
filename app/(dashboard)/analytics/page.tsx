@@ -1,4 +1,5 @@
 import { query } from "@/lib/db";
+import { requireSession } from "@/lib/require-session";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ function Bars({ title, rows }: { title: string; rows: { label: string; value: nu
 }
 
 export default async function Analytics() {
+  await requireSession();
   const energy = await query<{ label: string; value: number }>(
     `SELECT to_char(date_trunc('month', date), 'YYYY-MM') || ' · ' || workstream AS label,
             avg(percent_energy)::float AS value
