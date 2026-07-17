@@ -60,11 +60,11 @@ personal-coach login                  # one-time: prompts for server URL + API k
                                       # ~/.config/personal-coach/config.json
 personal-coach ingest                 # push career-coach/state/, pull new notes
 personal-coach ingest path/to/file.json   # push just one file
-personal-coach search "cash management" --topK=5
+personal-coach search "top priorities" --topK=5
 personal-coach notes list --type=idea
 personal-coach notes add "some thought" --type=thought --tags=a,b
 personal-coach context week 2026-06-15
-personal-coach person "Tom" --since=2026-01-01
+personal-coach person "John" --since=2026-01-01
 personal-coach status
 ```
 
